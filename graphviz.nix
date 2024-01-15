@@ -4,5 +4,5 @@ let
 in
   mkDerivation {
     name = "graphviz";
-    src = ./graphviz-2.49.3.tar.gz;
+    src = ./graphviz-9.0.0.tar.gz;
   }
