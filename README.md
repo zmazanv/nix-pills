@@ -5,3 +5,4 @@ This is simply a repository to store my work while going through the [Nix Pills]
 ##### Sources
 
 - [GNU Hello World - Tarball](https://ftp.gnu.org/gnu/hello)
+- [Graphviz - Tarball](https://gitlab.com/graphviz/graphviz/-/releases)
