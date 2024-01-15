@@ -1,39 +1,39 @@
 unset PATH
 for p in $baseInputs $buildInputs; do
-	export PATH=$p/bin${PATH:+:}$PATH
+    export PATH=$p/bin${PATH:+:}$PATH
 done
 
 unpackPhase() {
-	tar xzf $src
+    tar xzf $src
 
-	for d in *; do
-		if [ -d "$d" ]; then
-			cd "$d"
-			break
-		fi
-	done
+    for d in *; do
+        if [ -d "$d" ]; then
+            cd "$d"
+            break
+        fi
+    done
 }
 
 configurePhase() {
-	./configure --prefix=$out
+    ./configure --prefix=$out
 }
 
 buildPhase() {
-	make
+    make
 }
 
 installPhase() {
-	make install
+    make install
 }
 
 fixupPhase() {
-	find $out -type f -exec patchelf --shrink-rpath '{}' \; -exec strip '{}' \; 2>/dev/null
+    find $out -type f -exec patchelf --shrink-rpath '{}' \; -exec strip '{}' \; 2>/dev/null
 }
 
 genericBuild() {
-	unpackPhase
-	configurePhase
-	buildPhase
-	installPhase
-	fixupPhase
+    unpackPhase
+    configurePhase
+    buildPhase
+    installPhase
+    fixupPhase
 }
