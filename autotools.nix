@@ -4,16 +4,16 @@ pkgs: attrs: let
     args = [./builder.sh];
     setup = ./setup.sh;
     baseInputs = with pkgs; [
+      binutils.bintools
+      coreutils
+      findutils
+      gawk
+      gcc
+      gnugrep
+      gnumake
+      gnused
       gnutar
       gzip
-      gnumake
-      gcc
-      coreutils
-      gawk
-      gnused
-      gnugrep
-      binutils.bintools
-      findutils
       patchelf
     ];
     buildInputs = [];
