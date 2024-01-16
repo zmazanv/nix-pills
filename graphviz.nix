@@ -1,14 +1,16 @@
-let
-  pkgs = import <nixpkgs> {};
-  mkDerivation = import ./autotools.nix pkgs;
-in
-  mkDerivation {
-    name = "graphviz";
-    src = ./graphviz-9.0.0.tar.gz;
-    buildInputs = with pkgs; [
-      pkg-config
-      (pkgs.lib.getDev expat)
-      (pkgs.lib.getDev gd)
-      (pkgs.lib.getLib gd)
-    ];
-  }
+{
+  mkDerivation,
+  lib,
+  pkg-config,
+  expat,
+  gdSupport ? true,
+  gd,
+}:
+mkDerivation {
+  name = "graphviz";
+  src = ./graphviz-9.0.0.tar.gz;
+  buildInputs =
+    [pkg-config (lib.getDev expat)]
+    ++ lib.optional gdSupport (lib.getDev gd)
+    ++ lib.optional gdSupport (lib.getLib gd);
+}
