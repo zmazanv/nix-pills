@@ -1,41 +1,50 @@
+# shellcheck disable=2154,2164
+
 unset PATH
-for p in $baseInputs $buildInputs; do
-    if [ -d $p/bin ]; then
-        export PATH="$p/bin${PATH:+:}$PATH"
+for p in "${baseInputs}" "${buildInputs}"; do
+    # Make input `bin` directories available in `PATH`.
+    if [ -d "${p}/bin" ]; then
+        export PATH="${p}/bin${PATH:+:}${PATH}"
     fi
-    if [ -d $p/lib/pkgconfig ]; then
-        export PKG_CONFIG_PATH="$p/lib/pkgconfig${PKG_CONFIG_PATH:+:}$PKG_CONFIG_PATH"
+    # Make input `lib/pkgconfig` directories available in `PKG_CONFIG_PATH`.
+    if [ -d "${p}/lib/pkgconfig" ]; then
+        export PKG_CONFIG_PATH="${p}/lib/pkgconfig${PKG_CONFIG_PATH:+:}${PKG_CONFIG_PATH}"
     fi
 done
 
-unpackPhase() {
-    tar xzf $src
-
+# Unpack tarball and enter its unpacked directory.
+function unpackPhase {
+    tar xzf "${src}"
     for d in *; do
-        if [ -d "$d" ]; then
-            cd "$d"
+        if [ -d "${d}" ]; then
+            cd "${d}"
             break
         fi
     done
 }
 
-configurePhase() {
-    ./configure --prefix=$out
+# Run `configure` shell script ensuring output directory is set to `$out`.
+function configurePhase {
+    ./configure --prefix="${out}"
 }
 
-buildPhase() {
+# Build the output.
+function buildPhase {
     make
 }
 
-installPhase() {
+# Install the output.
+function installPhase {
     make install
 }
 
-fixupPhase() {
-    find $out -type f -exec patchelf --shrink-rpath '{}' \; -exec strip '{}' \; 2>/dev/null
+# Strip unneeded runtime dependencies.
+function fixupPhase {
+    find "${out}" -type f -exec patchelf --shrink-rpath '{}' \; -exec strip '{}' \; 2>/dev/null
 }
 
-genericBuild() {
+# Run entire build and install process.
+function genericBuild {
     unpackPhase
     configurePhase
     buildPhase
