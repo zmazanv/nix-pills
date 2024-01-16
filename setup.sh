@@ -1,7 +1,8 @@
 # shellcheck disable=2154,2164
 
 unset PATH
-for p in "${baseInputs}" "${buildInputs}"; do
+# `$baseInputs` and `$buildInputs` are space-separated strings.
+for p in ${baseInputs} ${buildInputs}; do
     # Make input `bin` directories available in `PATH`.
     if [ -d "${p}/bin" ]; then
         export PATH="${p}/bin${PATH:+:}${PATH}"
